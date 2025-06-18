@@ -169,9 +169,8 @@ class ScriptRunner:
                 TextContent(type="text", text=f"Successfully loaded CSV into dataframe '{df_name}'")
             ]
         except Exception as e:
-            raise McpError(
-                INTERNAL_ERROR, f"Error loading CSV: {str(e)}"
-            ) from e
+            # raise McpError(f"[INTERNAL_ERROR] Error loading CSV: {str(e)}") from e
+            print(f"Error loading CSV: {str(e)}")
 
     def safe_eval(self, script: str, save_to_memory: Optional[List[str]] = None):
         """safely run a script, return the result if valid, otherwise return the error message"""
@@ -191,7 +190,8 @@ class ScriptRunner:
                 local_dict)
             std_out_script = stdout_capture.getvalue()
         except Exception as e:
-            raise McpError(INTERNAL_ERROR, f"Error running script: {str(e)}") from e
+            # raise McpError(f"[INTERNAL_ERROR] Error running script: {str(e)}") from e
+            print(f"Error running script: {str(e)}")
 
         # check if the result is a dataframe
         if save_to_memory:
@@ -308,7 +308,8 @@ async def main():
             df_name = arguments.get("df_name")
             return script_runner.safe_eval(script, df_name)
         else:
-            raise McpError(INTERNAL_ERROR, f"Unknown tool: {name}")
+            # raise McpError(f"[INTERNAL_ERROR] Unknown tool: {name}")
+            pass
         return None
 
     async with mcp.server.stdio.stdio_server() as (read_stream, write_stream):
